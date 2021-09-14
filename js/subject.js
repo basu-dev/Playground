@@ -1,11 +1,14 @@
-function Subject() {
+export function Subject() {
   let callBacks = [];
 
   this.subscribe = function (cb) {
     callBacks.push(cb);
     return {
-      unsubscribe: function unsubscribe() {
+      unsubscribe: function () {
         callBacks = callBacks.filter((data) => data != cb);
+      },
+      map: function (cb) {
+        cb();
       },
     };
   };
@@ -15,14 +18,15 @@ function Subject() {
   };
 }
 
-// let a = new Subject();
+// let mySub = new Subject();
 
-// a.subscribe((a) => console.log("value", a));
+// mySub.subscribe((value) => console.log("value from first subscirption", value));
+// let i = 0;
+// setInterval(() => mySub.next(++i), 1000);
 
-// let b = new Subject();
-// a.next("bac");
+// mySub.subscribe((value) => console.log("value from second sub", value));
 
-function BehaviorSubject(initialValue) {
+export function BehaviorSubject(initialValue) {
   let callBacks = [];
   let currentValue = initialValue;
 
@@ -42,12 +46,12 @@ function BehaviorSubject(initialValue) {
   };
 }
 
-let a = new BehaviorSubject(1);
-a.next(2);
+// let a = new BehaviorSubject(1);
+// a.next(2);
 
-a.subscribe((value) => console.log("first subscription", value));
-let subscription2 = a.subscribe((value, prev) =>
-  console.log("second subscription", value, prev)
-);
-// subscription2.unsubscribe();
-a.next(3);
+// a.subscribe((value) => console.log("first subscription", value));
+// let subscription2 = a.subscribe((value, prev) =>
+//   console.log("second subscription", value, prev)
+// );
+// // subscription2.unsubscribe();
+// a.next(3);
