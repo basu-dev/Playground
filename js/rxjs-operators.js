@@ -2,6 +2,7 @@ function Subject() {
   let callBacks = [];
   return {
     subscribe: (cb) => {
+      callBacks.push(cb);
       return {
         unsubscribe: function () {
           callBacks = callBacks.filter((fn) => fn != cb);
@@ -16,25 +17,66 @@ function Subject() {
   };
 }
 
-let sub = Subject();
+function Injector() {
+  let functionName = this.__proto__.constructor;
+  let instance = this;
+  let instances = new Map();
+  instances[functionName] = instance;
 
-// sub.subscribe((value) => console.log(this, value));
+  window.ins = this;
 
-let i = 0;
-setInterval(() => sub.next(++i), 1000);
-
-class MyClass {
-  constructor() {
-    sub.subscribe(function (value) {
-      console.log("from ", this);
-    });
-  }
-  hello() {}
+  this.get = function (type) {
+    if (type in instances) {
+      console.log(instances);
+      return instances[type];
+    }
+    let instance = new type();
+    instances[type] = instance;
+    return instance;
+  };
 }
 
-class SecondClass {
-  constructor() {
-    sub.subscribe((value) => this.hello());
+class DataService {
+  userSub$ = new Subject();
+}
+
+class AppComponent {
+  dataService;
+  injector;
+  constructor(injector) {
+    this.injector = injector;
+    this.dataService = this.injector.get(DataService);
+  }
+  a = 3;
+
+  userSub;
+
+  increment() {
+    console.log(++this.a);
+  }
+
+  onInit() {
+    this.userSub = this.dataService.userSub$.subscribe((a) => this.increment());
+    setTimeout(() => this.userSub.unsubscribe(), 5000);
   }
 }
-let classOBj = new MyClass();
+
+class SecondComponent {
+  i = 0;
+  dataService;
+  constructor(dataService) {
+    this.dataService = dataService;
+  }
+  onInit() {
+    setInterval(() => this.dataService.userSub$.next(++this.i), 1000);
+  }
+}
+
+/* This below code is all done by frameword when main.ts run */
+let injector = new Injector();
+
+let appComponent = new AppComponent(injector.get(Injector));
+let secondComponent = new SecondComponent(injector.get(DataService));
+
+appComponent.onInit();
+secondComponent.onInit();

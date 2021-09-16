@@ -1,3 +1,7 @@
+let functionPrototype = {
+  // return function()
+};
+
 function factoryFunction(firstName, lastName) {
   return {
     firstName,
