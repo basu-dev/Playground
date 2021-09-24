@@ -16,7 +16,15 @@ let employee = {
     },
   },
 };
-
+/** Expected output from
+ * employee_id:1,
+ * employee_name_firstName:"Basu",
+ * employee_name_lastName:"Adhikari"
+ * employee_location_country:"Nepal"
+ *
+ * ...
+ * and so on
+ */
 function recursive(obj, parent, res) {
   for (key in obj) {
     if (obj[key] instanceof Object) {

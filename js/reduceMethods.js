@@ -20,6 +20,13 @@ let students = [
     faculty: "BCT",
   },
 ];
+/** Expected output from
+ * {
+ * "BEX":["Basu","Dev"],
+ * "BCE":["C"],
+ * "BCT":["D","E"]
+ * }
+ */
 
 let res = students
   .map((stu) => {
@@ -33,5 +40,3 @@ let res = students
     }
     return acc;
   }, {});
-
-console.log(res);

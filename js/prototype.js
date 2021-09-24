@@ -3,18 +3,16 @@ let functionPrototype = {
 };
 
 function factoryFunction(firstName, lastName) {
-  return {
-    firstName,
-    lastName,
-    greet: function () {
-      console.log("Hello " + this.firstName);
-    },
-  };
+  this.firstName = firstName;
+  this.lastName = lastName;
 }
+factoryFunction.prototype.greet = function () {
+  return this.firstName + " " + this.lastName;
+};
 
-let basu = factoryFunction("Basu", "Dev");
+let basu = new factoryFunction("Basu", "Dev");
 
-let murari = factoryFunction("Murari", "Adhikari");
+let murari = new factoryFunction("Murari", "Adhikari");
 
 console.log(basu.greet());
 console.log(murari.greet());
