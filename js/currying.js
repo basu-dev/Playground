@@ -36,7 +36,7 @@ let logWarn = function (message) {
   return log.call(this, message, "warn");
 };
 
-logWarn("hello");
+// logWarn("hello");
 
 // Lets Take Third Example
 
@@ -49,3 +49,13 @@ let square = function (a) {
 let cube = function (a) {
   return multiplier(multiplier.call(this, a, a), a);
 };
+
+const sum = (a) => (b) => {
+  if (!b) {
+    return a;
+  } else {
+    return sum(a + b);
+  }
+};
+
+console.log(sum(1)(2)(5)());
