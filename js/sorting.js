@@ -32,7 +32,7 @@ let arr = [];
   for (let i = 0; i < number; i++) {
     arr.push(Math.ceil(Math.random() * 10));
   }
-})(arr, 5_000);
+})(arr, 5_000_000);
 
 const Sort = function (array) {
   this.array = array;
