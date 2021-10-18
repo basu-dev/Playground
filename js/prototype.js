@@ -6,6 +6,7 @@ function factoryFunction(firstName, lastName) {
   this.firstName = firstName;
   this.lastName = lastName;
 }
+
 factoryFunction.prototype.greet = function () {
   return this.firstName + " " + this.lastName;
 };

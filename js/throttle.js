@@ -1,8 +1,9 @@
+"use strict";
 /** Throttle means call function in certain Interval */
 let inputField = document.querySelector("input");
 
 function fetchApi(str, from) {
-  console.log(`Fetching for ${str} from ${from}`);
+  console.log(`Fetching for ${str} `);
 }
 
 const throttle1 = (function (delay) {
@@ -47,29 +48,30 @@ function throttle2(cb, delay) {
   };
 }
 
-const throttle3 = (function (interval) {
-  let call = true;
-  let first = true;
+// inputField.addEventListener(
+//   "keyup",
+//   throttle2((event) => fetchApi(event.target.value, "2"), 300)
+// );
+
+const throttle5 = (function (delay) {
+  let startTimer = true;
+  let firstPress = true;
   return function (cb) {
-    if (call) {
-      if (first) {
-        first = false;
-        return cb();
-      }
-      call = false;
+    if (firstPress) {
+      firstPress = false;
+      return cb();
+    }
+    if (startTimer) {
+      console.log(firstPress);
+      startTimer = false;
       setTimeout(() => {
         cb();
-        call = true;
-      }, interval);
+        startTimer = true;
+      }, delay);
     }
   };
 })(1000);
 
 inputField.addEventListener("keyup", (e) =>
-  throttle3(() => fetchApi(e.target.value, "1"))
-);
-
-inputField.addEventListener(
-  "keyup",
-  throttle2((event) => fetchApi(event.target.value, "2"), 300)
+  throttle5(() => fetchApi(e.target.value, "1"))
 );

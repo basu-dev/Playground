@@ -35,14 +35,17 @@ function x() {
   };
 }
 
+/*
 let counter = x();
 counter.adder();
 counter.adder();
 counter.substracter();
+*/
 
 function multiplier(a, b) {
   return a * b;
 }
+
 /// This below methods come under recursion with closure
 let power = (a, powerNumber) => {
   result = 1;
@@ -62,28 +65,40 @@ let power = (a, powerNumber) => {
 };
 
 /// This below function is similar to memoize which caches results to give fast results.
-
-function superPower() {
-  obj = {};
+function superPower(fn) {
+  let cache = {};
   return function (a, b) {
-    let key = a.toString() + "+" + b.toString();
-    if (key in obj) {
-      return obj[key];
+    let key = a * b + (a - b) + 1000000;
+    if (key in cache) {
+      return cache[key];
     }
+
     let res = power(a, b);
-    obj[key] = res;
+    cache[key] = res;
     return res;
   };
 }
 
 let spower = superPower();
-let index = 1000;
+let index = 50_000;
+let itemCount = index;
 
+sResult = [];
+results = [];
 console.time();
 
 while (index > 0) {
-  spower(150, 150);
+  let random1 = Math.floor(Math.random() * 1000);
+  let random2 = Math.floor(Math.random() * 100);
+  sResult.push(spower(random1, random2));
+  results.push(power(random1, random2));
   index--;
 }
 
 console.timeEnd();
+
+for (let i = 0; i < itemCount; i++) {
+  if (!!(sResult[i] - result[i])) {
+    console.log(i, " not same value");
+  }
+}

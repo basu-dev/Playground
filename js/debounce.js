@@ -9,8 +9,7 @@ const fetchApi = (str) => {
 };
 
 const delayed = (function debounce(delay) {
-  console.log(this);
-  var timer;
+  let timer;
   return function (cb) {
     if (timer) clearTimeout(timer);
     timer = setTimeout(cb, delay);
