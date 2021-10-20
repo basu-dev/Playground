@@ -65,3 +65,18 @@ Object.defineProperty(human, "age", {
 });
 // human.age = 5;
 console.log(human);
+
+let parent = {
+  sayHi() {
+    console.log("Hi from " + this.name);
+  },
+};
+/* anothe alternative to Object.create*/
+let child = { name: "Basu" };
+child.__proto__ = parent;
+console.log(child);
+
+/* another alternative to Object.assign with ES6*/
+
+let anotherChild = { ...parent, ...child };
+console.log(anotherChild);

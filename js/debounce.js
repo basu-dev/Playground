@@ -8,7 +8,15 @@ const fetchApi = (str) => {
   console.log(`Fetching for ${str}`);
 };
 
-const delayed = (function debounce(delay) {
+// const delayed = (function debounce(delay) {
+//   let timer;
+//   return function (cb) {
+//     if (timer) clearTimeout(timer);
+//     timer = setTimeout(cb, delay);
+//   };
+// })(300);
+
+const delayed = (function (delay) {
   let timer;
   return function (cb) {
     if (timer) clearTimeout(timer);

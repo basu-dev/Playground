@@ -48,11 +48,6 @@ function throttle2(cb, delay) {
   };
 }
 
-// inputField.addEventListener(
-//   "keyup",
-//   throttle2((event) => fetchApi(event.target.value, "2"), 300)
-// );
-
 const throttle5 = (function (delay) {
   let startTimer = true;
   let firstPress = true;
