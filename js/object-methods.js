@@ -20,6 +20,8 @@
  * (Accessor Attribute Group has get,set,enumerable & configurable)
  */
 
+let log = console.log;
+
 let a = { class: 10 };
 
 let b = Object.create(a);
@@ -80,3 +82,14 @@ console.log(child);
 
 let anotherChild = { ...parent, ...child };
 console.log(anotherChild);
+
+let p = {
+  a: 5,
+  log: function () {
+    return this.a;
+  },
+};
+
+log(p.log());
+let pcopy = Object.create(p);
+log(pcopy.hasOwnProperty("a"));

@@ -1,38 +1,11 @@
-/* Combine Tow sorted array which needs to be sorted as well */
-const combineSorted = () => {
-  arr1 = [1, 3, 7, 9];
-  arr2 = [2, 4, 5];
-  /*
-output =[1,2,3,4,5,7,9]
- */
-
-  let [minArray, maxArray] =
-    arr1.length > arr2.length ? [arr2, arr1] : [arr1, arr2];
-  const arrLen = minArray.length;
-  let combinedArr = [];
-  arr1Index = 0;
-  arr2Index = 0;
-  for (let i = 0; i < arrLen; i++) {
-    if (arr1[arr1Index] < arr2[arr2Index]) {
-      combinedArr.push(arr1[arr1Index]);
-      arr1Index++;
-    }
-    {
-      combinedArr.push(arr2[arr2Index]);
-      arr2Index++;
-    }
-  }
-  let completeArray = [...combinedArr, ...maxArray.slice(arrLen)];
-  console.log(completeArray);
-};
-
 /* Sorting Algorithm */
-let arr = [];
-(function populateRandomNumber(arr, number) {
-  for (let i = 0; i < number; i++) {
-    arr.push(Math.ceil(Math.random() * 10));
+let arr = (function createArrayOfRandomNumbers(length) {
+  let arr = [];
+  for (let i = 0; i < length; i++) {
+    arr.push(Math.ceil(Math.random() * 1000));
   }
-})(arr, 5_000_000);
+  return arr;
+})(1000);
 
 const Sort = function (array) {
   this.array = array;
@@ -42,6 +15,7 @@ Sort.prototype = {
   BuiltInSort: function () {
     return this.array.sort((a, b) => a - b);
   },
+
   BubbleSort: function () {
     /* This is sorting algorithm is of time complexity of O(n^2).*/
     let arr = [...this.array];
@@ -55,18 +29,80 @@ Sort.prototype = {
     }
     return arr;
   },
+
+  QuickSort: function () {
+    let arr = [...this.array];
+    function sort(arr, start, end) {
+      if (start >= end) return;
+      let pivotIndex = pivot(arr, start, end);
+      sort(arr, start, pivotIndex - 1);
+      sort(arr, pivotIndex + 1, end);
+    }
+
+    function pivot(arr, start, end) {
+      let pivotIndex = start;
+      let pivotValue = arr[end];
+      for (let i = start; i < end; i++) {
+        if (arr[i] < pivotValue) {
+          swap(arr, i, pivotIndex);
+          pivotIndex++;
+        }
+      }
+      swap(arr, pivotIndex, end);
+      return pivotIndex;
+    }
+
+    function swap(arr, start, end) {
+      let temp = arr[start];
+      arr[start] = arr[end];
+      arr[end] = temp;
+    }
+
+    sort(arr, 0, arr.length - 1);
+    return arr;
+  },
 };
 
 const time = function (cb) {
   console.time();
-
   let val = cb();
   console.timeEnd();
   return val;
 };
 
-let sorted = time(() => new Sort(arr).BuiltInSort());
+let sorted = time(() => new Sort(arr).QuickSort());
 // console.log(sorted);
+
+/* Combine Tow sorted array which needs to be sorted as well */
+function combineSorted(arr1, arr2) {
+  /*
+  arr1 = [1, 3, 7, 9];
+  arr2 = [2, 4, 5];
+  output =[1,2,3,4,5,7,9]
+ */
+
+  let [minArray, maxArray] =
+    arr1.length > arr2.length ? [arr2, arr1] : [arr1, arr2];
+
+  const arrLen = minArray.length;
+
+  let combinedArr = [];
+  arr1Index = 0;
+  arr2Index = 0;
+
+  for (let i = 0; i < arrLen; i++) {
+    if (arr1[arr1Index] < arr2[arr2Index]) {
+      combinedArr.push(arr1[arr1Index]);
+      arr1Index++;
+    }
+    {
+      combinedArr.push(arr2[arr2Index]);
+      arr2Index++;
+    }
+  }
+
+  return [...combinedArr, ...maxArray.slice(arrLen)];
+}
 
 /* Printing Sum of Border Elements */
 function SumOfBorderElements() {
@@ -76,6 +112,7 @@ function SumOfBorderElements() {
     [1, 1, 1, 1],
     [1, 1, 1, 1],
   ];
+  /* result = 12 */
 
   let m = mat.length;
   let n = mat[0].length;
