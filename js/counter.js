@@ -1,3 +1,4 @@
+/* Counter using closure*/
 function Counter() {
   let count = 0;
   this.increment = function () {
@@ -8,8 +9,8 @@ function Counter() {
   };
 }
 
-let counter1 = new Counter();
-let counter2 = new Counter();
+let counter1 = Counter();
+let counter2 = Counter();
 
 console.log(counter1.increment == counter2.increment);
 
