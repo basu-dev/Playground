@@ -1,76 +1,105 @@
-class MyPromise {
-  constructor(promise) {
-    this.promise = promise;
-    this.promiseCalled = false;
+var Promise3 = (function () {
+  function Promise3(fn) {
+    let self = this;
+    queueMicrotask(function () {
+      self.constructor(fn);
+    });
   }
-  promiseCall() {
-    if (this.promiseCalled) return;
-    this.promiseCalled = true;
-    this.promise(
-      (val) => {
-        if (this.thenCallback) this.thenCallback(val);
+
+  Promise3.prototype.constructor = function (fn) {
+    let self = this;
+    fn(
+      function (value) {
+        self.thenFn(value);
       },
-      (err) => {
-        if (this.errorCallback) this.errorCallback(err);
+      function (value) {
+        self.catchFn(value);
       }
     );
+  };
+  Promise3.prototype.finallyFn = function () {
+    this.thenFn = () => {};
+    this.catchFn = () => {};
+  };
+
+  Promise3.prototype.catchFn = function () {
+    this.finallyFn();
+  };
+
+  Promise3.prototype.then = function (fn) {
+    this.thenFn = function (value) {
+      fn(value);
+      this.finallyFn();
+    };
+    return this;
+  };
+
+  Promise3.prototype.catch = function (fn) {
+    this.catchFn = function (value) {
+      fn(value);
+      this.finallyFn();
+    };
+    return this;
+  };
+
+  Promise3.prototype.finally = function (fn) {
+    this.finallyFn = function () {
+      fn();
+      this.thenFn = function () {};
+      this.catchFn = function () {};
+    };
+    return this;
+  };
+  return Promise3;
+})();
+
+class Promise2 {
+  thenFn = () => this.finallyFn();
+  catchFn = () => this.finallyFn();
+
+  constructor(fn) {
+    queueMicrotask(() => {
+      fn(
+        (value) => this.thenFn(value),
+        (value) => this.catchFn(value)
+      );
+    });
   }
-  then(cb) {
-    this.thenCallback = cb;
-    this.promiseCall.call(this);
+
+  then(fn) {
+    this.thenFn = (value) => {
+      fn(value);
+      this.finallyFn();
+    };
     return this;
   }
-  catch(cb) {
-    this.errorCallback = cb;
-    this.promiseCall.call(this);
+
+  catch(fn) {
+    this.catchFn = (value) => {
+      fn(value);
+      this.finallyFn();
+    };
+    return this;
+  }
+
+  finally(fn) {
+    this.finallyFn = () => {
+      fn();
+      this.thenFn = () => {};
+      this.catchFn = () => {};
+    };
     return this;
   }
 }
 
-function MyPromise2(promise) {
-  let promiseInvoked = false;
-  let thenCallback, errorCallback;
-
-  function invokePromise() {
-    if (promiseInvoked) return;
-    promiseInvoked = true;
-    promise(
-      (data) => {
-        if (thenCallback) thenCallback(data);
-      },
-      (err) => {
-        if (errorCallback) errorCallback(err);
-      }
-    );
-  }
-
-  const then = function (cb) {
-    thenCallback = cb;
-    invokePromise.call(this);
-    return this;
-  };
-  const catc = function (cb) {
-    errorCallback = cb;
-    invokePromise.call(this);
-    return this;
-  };
-  return {
-    then,
-    catc,
-  };
-}
-
-function getData() {
-  return new MyPromise((resolve, reject) => {
-    setTimeout(function () {
-      let data = Math.ceil(Math.random() * 10);
-      if (data >= 5) {
-        resolve({ success: true, data });
-      } else {
-        reject({ error: true, data });
-      }
-    }, 100);
+(function A() {
+  let a = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(3);
+    }, 500);
   });
-}
 
-getData().catch(console.warn).then(console.log);
+  a.finally(() => console.log("Done"))
+    .then(console.log)
+    .catch(console.error);
+})();
